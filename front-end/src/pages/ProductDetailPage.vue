@@ -9,7 +9,7 @@
       <button class="add-to-cart">Add To Cart</button>
     </div>
   </div>
-  <div v-else="!product">
+  <div valid-v-else="!product">
     <NotFoundPage/>
   
   </div>
