@@ -1,7 +1,7 @@
 <template>
   <div v-if="product">
     <div class="img-wrap">
-      <img :src="product?.imageName" />
+      <img :src="product?.imageUrl" />
     </div>
     <div class="product-details">
       <h1 >{{ product?.name }}</h1>
@@ -9,27 +9,30 @@
       <button class="add-to-cart">Add To Cart</button>
     </div>
   </div>
-  <div valid-v-else="!product">
+  <div v-if="!product">
     <NotFoundPage/>
-  
   </div>
- 
-  
 
 </template>
 
 <script>
 import NotFoundPage from './NotFoundPage.vue'
-import { products } from '../temp-data';
+import axios from 'axios';
 export default {
   name: "ProductDetailPage",
   data() {
     return {
-      product: products.find(product => product.id === this.$route.params.productId),
+      product: {},
     }
   },
   components: {
     NotFoundPage
+  },
+  async created() {
+    const response = await axios.get(`/api/products/${this.$route.params.productId}`);
+    const product = response.data;
+    this.product = product;
   }
+
 };
 </script>
