@@ -6,7 +6,10 @@
     <div class="product-details">
       <h1 >{{ product?.name }}</h1>
       <h3 class="price">{{ product?.price }}</h3>
-      <button @click="addToCart" class="add-to-cart">Add To Cart</button>
+      <button v-if="!productExistsInCurrentCart" @click="addToCart" class="add-to-cart">Add To Cart</button>
+      <div v-if="productExistsInCurrentCart">
+        <button class="grey-button">Item is already in Cart!</button>
+      </div>
     </div>
   </div>
   <div v-if="!product">
@@ -18,11 +21,15 @@
 <script>
 import NotFoundPage from './NotFoundPage.vue'
 import axios from 'axios';
+
+
+
 export default {
   name: "ProductDetailPage",
   data() {
     return {
       product: {},
+      currentCart: []
     }
   },
   methods: {
@@ -35,10 +42,21 @@ export default {
   components: {
     NotFoundPage
   },
+  computed: {
+    productExistsInCurrentCart() {
+      return this.currentCart.filter(x => x.id === this.product.id).length > 0;
+    }
+
+  },
   async created() {
     const response = await axios.get(`/api/products/${this.$route.params.productId}`);
-    const product = response.data;
-    this.product = product;
+    this.product = response.data;
+
+    //loading the users current cart
+    const responseCart = await axios.get('/api/users/12345/cart');
+    this.currentCart = responseCart.data;
+
+
   }
 
 };
