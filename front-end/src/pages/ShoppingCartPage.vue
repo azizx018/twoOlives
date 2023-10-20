@@ -38,8 +38,7 @@ export default {
   },
   async created() {
     const response = await axios.get('/api/users/12345/cart');
-    const cartItems = response.data;
-    this.cartItems = cartItems;
+    this.cartItems = response.data;
 
   }
 };
