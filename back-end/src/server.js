@@ -31,8 +31,9 @@ async function start() {
 
 
     async function populateCartIds(ids) {
-        return Promise.all(ids?.map(id => db.collection('products').findOne({ id })));
-
+        if (ids) {
+            return Promise.all(ids.map(id => db.collection('products').findOne({ id })));
+        }
     }
 
     app.get('/api/users/:userId/cart', async (req, res) => {
@@ -53,6 +54,11 @@ async function start() {
     app.post('/api/users/:userId/cart', async (req, res) => {
         const userId = req.params.userId;
         const productId = req.body.id;
+
+        const existingUser = await db.collection('users').findOne({ id: userId});
+        if (!existingUser) {
+            await db.collection('users').insertOne({ id: userId}, {cartItems: []});
+        }
 
         await db.collection('users').updateOne({ id: userId }, {
             //tells mongo what type of update- adding productid onto arry of cart items

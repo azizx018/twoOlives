@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     async addToCart() {
-      await axios.post('/api/users/12345/cart', { id: this.$route.params.productId});
+      await axios.post(`/api/users/${this.user.uid}/cart`, { id: this.$route.params.productId});
       alert('Items added to your cart!');
 
     },
@@ -59,6 +59,7 @@ export default {
   },
   computed: {
     productExistsInCurrentCart() {
+      //debugger; // eslint-disable-line no-debugger
       return this.currentCart.filter(x => x.id === this.product.id).length > 0;
     }
 
@@ -68,7 +69,7 @@ export default {
       if (newUserValue) {
         //loading the users current cart
         const responseCart = await axios.get(`/api/users/${newUserValue.uid}/cart`);
-        this.currentCart = responseCart.data;
+        this.currentCart = responseCart.data.length === 0 ? [] : responseCart.data;
     }
 
     }
