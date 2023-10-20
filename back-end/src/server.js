@@ -31,13 +31,13 @@ async function start() {
 
 
     async function populateCartIds(ids) {
-        return Promise.all(ids.map(id => db.collection('products').findOne({ id })));
+        return Promise.all(ids?.map(id => db.collection('products').findOne({ id })));
 
     }
 
     app.get('/api/users/:userId/cart', async (req, res) => {
         const user = await db.collection('users').findOne({ id: req.params.userId });
-        const populatedCart = await populateCartIds(user.cartItems);
+        const populatedCart = await populateCartIds(user?.cartItems);
         res.json(populatedCart);
 
     });
@@ -61,7 +61,7 @@ async function start() {
             $addToSet: { cartItems: productId }
         });
         const user = await db.collection('users').findOne({ id: req.params.userId });
-        const populatedCart = await populateCartIds(user.cartItems);
+        const populatedCart = await populateCartIds(user?.cartIems);
         res.json(populatedCart);
     });
 
@@ -73,7 +73,7 @@ async function start() {
         });
 
         const user = await db.collection('users').findOne({ id: req.params.userId });
-        const populatedCart = await populateCartIds(user.cartItems);
+        const populatedCart = await populateCartIds(user?.cartItems);
         res.json(populatedCart);
     });
 
