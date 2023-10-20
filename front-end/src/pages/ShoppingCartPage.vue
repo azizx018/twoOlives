@@ -29,8 +29,7 @@ export default {
   methods: {
     async removeFromCart(productId) {
       const response = await axios.delete(`/api/users/12345/cart/${ productId}`);
-      const updatedCart = response.data;
-      this.cartItems = updatedCart;
+      this.updatedCart = response.data;
 
 
     }
