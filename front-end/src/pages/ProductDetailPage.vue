@@ -6,9 +6,9 @@
     <div class="product-details">
       <h1 >{{ product?.name }}</h1>
       <h3 class="price">{{ product?.price }}</h3>
-      <button v-if="!productExistsInCurrentCart" @click="addToCart" class="add-to-cart">Add To Cart</button>
-      <button class="grey-button" v-if="productExistsInCurrentCart">Item is already in Cart!</button>
-      <button class="sign-in" @click="signIn">Sign in to add to cart</button>
+      <button v-if="user && !productExistsInCurrentCart" @click="addToCart" class="add-to-cart">Add To Cart</button>
+      <button class="grey-button" v-if="user && productExistsInCurrentCart">Item is already in Cart!</button>
+      <button class="sign-in" @click="signIn" v-if="!user">Sign in to add to cart</button>
       
     </div>
   </div>
@@ -27,6 +27,7 @@ import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailL
 
 export default {
   name: "ProductDetailPage",
+  props: ['user'],
   data() {
     return {
       product: {},
@@ -62,6 +63,17 @@ export default {
     }
 
   },
+  watch: {  
+    async user(newUserValue) {
+      if (newUserValue) {
+        //loading the users current cart
+        const responseCart = await axios.get(`/api/users/${newUserValue.uid}/cart`);
+        this.currentCart = responseCart.data;
+    }
+
+    }
+
+  },
   async created() {
     const auth = getAuth();
     if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -73,9 +85,13 @@ export default {
     const response = await axios.get(`/api/products/${this.$route.params.productId}`);
     this.product = response.data;
 
-    //loading the users current cart
-    const responseCart = await axios.get('/api/users/12345/cart');
-    this.currentCart = responseCart.data;
+    if (this.user) {
+      //loading the users current cart
+      const responseCart = await axios.get(`/api/users/${this.user.uid}/cart`);
+      this.currentCart = responseCart.data;
+    }
+
+    
 
 
   }
