@@ -39,14 +39,18 @@ export default {
       alert('Items added to your cart!');
 
     },
-    signIn() {
-      const email = promt('Please enter your email to sign in:');
+    async signIn() {
+      const email = prompt('Please enter your email to sign in:');
       const auth = getAuth();
       const actionCodeSettings = {
         url: `http://localhost:8081/products/${this.$route.params.productId}`,
         handleCodeInApp: true,
       }
-      sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      alert('Please check your email for a sign in link');
+      window.localStorage.setItem('emailForSignIn', email);
+
+
     }
   },
   components: {
@@ -59,6 +63,13 @@ export default {
 
   },
   async created() {
+    const auth = getAuth();
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      const email = window.localStorage.getItem('emailForSignIn');
+      await signInWithEmailLink(auth, email, window.location.href);
+      alert('Successfully Signed in');
+      window.localStorage.removeItem('emailForSignIn');
+    }
     const response = await axios.get(`/api/products/${this.$route.params.productId}`);
     this.product = response.data;
 
