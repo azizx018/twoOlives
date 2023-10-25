@@ -44,7 +44,7 @@ export default {
       const email = prompt('Please enter your email to sign in:');
       const auth = getAuth();
       const actionCodeSettings = {
-        url: `http://localhost:8081/products/${this.$route.params.productId}`,
+        url: `https://two-olives-vue-deployment.onrender.com/products/${this.$route.params.productId}`,
         handleCodeInApp: true,
       }
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
