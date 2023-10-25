@@ -24,7 +24,7 @@ async function start() {
 
     app.use(express.static(
         path.resolve(__dirname, '../dist'),
-        {maxAge: '1yr', etag: false},
+        {maxAge: '1y', etag: false},
     ));
 
 
