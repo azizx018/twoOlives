@@ -6,8 +6,6 @@ import path from 'path';
 
 
 
-
-
 async function start() {
     const port =  process.env.PORT || 8000;
     const url = `mongodb+srv://fullstack-server:${process.env.DB_PASSWORD}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
