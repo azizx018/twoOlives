@@ -9,7 +9,7 @@ import path from 'path';
 
 
 async function start() {
-    const port = 8000;
+    const port =  process.env.PORT || 8000;
     const url = `mongodb+srv://fullstack-server:${process.env.DB_PASSWORD}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
 
     const client = new MongoClient(url);
@@ -21,6 +21,11 @@ async function start() {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/images', express.static(path.join(__dirname, '../assets')));
+
+    app.use(express.static(
+        path.resolve(__dirname, '../dist'),
+        {maxAge: '1yr', etag: false},
+    ));
 
 
     app.get('/api/products', async (req, res) => {
@@ -82,6 +87,13 @@ async function start() {
         const populatedCart = await populateCartIds(user?.cartItems);
         res.json(populatedCart);
     });
+
+    //takes care of other requests not handeled above
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname,'../dist/index.html'));
+    });
+
+
 
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
