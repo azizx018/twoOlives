@@ -4,11 +4,11 @@ require('dotenv').config();
 import 'dotenv/config';
 import path from 'path';
 
-
+// const password = encodeURIComponent(process.env.DB_PASSWORD)
 
 async function start() {
-    const port =  process.env.PORT || 8000;
-    const url = `mongodb+srv://fullstack-server:${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
+    const port = 8000;
+    const url = `mongodb+srv://fullstack-server:${process.env.DB_USER}: ${process.env.DB_PASSWORD}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
 
     const client = new MongoClient(url);
 
@@ -22,7 +22,7 @@ async function start() {
 
     app.use(express.static(
         path.resolve(__dirname, '../dist'),
-        {maxAge: '1y', etag: false},
+        { maxAge: '1y', etag: false },
     ));
 
 
@@ -58,9 +58,9 @@ async function start() {
         const userId = req.params.userId;
         const productId = req.body.id;
 
-        const existingUser = await db.collection('users').findOne({ id: userId});
+        const existingUser = await db.collection('users').findOne({ id: userId });
         if (!existingUser) {
-            await db.collection('users').insertOne({ id: userId}, {cartItems: []});
+            await db.collection('users').insertOne({ id: userId }, { cartItems: [] });
         }
 
         await db.collection('users').updateOne({ id: userId }, {
