@@ -5,8 +5,8 @@ import 'dotenv/config';
 import path from 'path';
 
 
-const user = encodeURIComponent('fullstack-server')
-const password = encodeURIComponent('BucketsOfLove')
+const user = encodeURIComponent(process.env.DB_USER)
+const password = encodeURIComponent(process.env.DB_PASSWORD)
 
 async function start() {
     const port = 8000;
