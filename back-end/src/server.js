@@ -6,11 +6,11 @@ import path from 'path';
 
 
 const user = encodeURIComponent(process.env.DB_USER)
-const password = encodeURIComponent(process.env.DB_PASSWORD)
+// const password = encodeURIComponent(process.env.DB_PASSWORD)
 
 async function start() {
     const port = 8000;
-    const url = `mongodb+srv://fullstack-server:${user}: ${password}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
+    const url = `mongodb+srv://fullstack-server:${user}: ${process.env.DB_PASSWORD}@cluster0.toqxqs8.mongodb.net/?retryWrites=true&w=majority`
 
     const client = new MongoClient(url);
 
